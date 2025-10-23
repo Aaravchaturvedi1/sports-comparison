@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cricket vs. Ping Pong — Sports Comparison | 板球 对比 乒乓球</title>
+  <style>
+    :root{
+      --bg: #0b1220;
+      --card: #0f172a;
+      --soft: #1e293b;
+      --muted: #94a3b8;
+      --text: #e5e7eb;
+      --cricket: #22c55e;   /* green */
+      --pong:    #3b82f6;   /* blue */
+      --accent:  #fbbf24;   /* gold */
+      --winRow:  rgba(34,197,94,0.09);
+      --winRowP: rgba(59,130,246,0.09);
+      --radius:  18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans SC, PingFang SC, Microsoft YaHei, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(34,197,94,0.12), transparent 60%),
+        radial-gradient(1200px 600px at 110% 0%, rgba(59,130,246,0.10), transparent 60%),
+        var(--bg);
+      color:var(--text);
+      line-height:1.45;
+      padding: 28px 14px 64px;
+    }
+    .wrap{max-width: 980px; margin: 0 auto;}
+    header{
+      display:flex;flex-direction:column;gap:16px;margin-bottom:18px
+    }
+    .title{
+      display:flex;align-items:center;gap:12px;flex-wrap:wrap
+    }
+    .title h1{
+      margin:0;font-size: clamp(20px, 3.4vw, 34px);letter-spacing:.2px
+    }
+    .tag{
+      font-size:12px;color:#cbd5e1;background:linear-gradient(90deg, rgba(34,197,94,.15), rgba(59,130,246,.15));
+      border:1px solid rgba(148,163,184,.2);padding:6px 10px;border-radius:999px
+    }
+
+    /* Scorebar */
+    .scorebar{
+      background: #0c1326; border:1px solid rgba(148,163,184,.2); height: 18px; border-radius: 999px;
+      position: relative; overflow:hidden
+    }
+    .scorebar .fill{
+      position:absolute;left:0;top:0;height:100%;width:0%;
+      background: linear-gradient(90deg, var(--cricket), #10b981);
+      transition: width .8s ease;
+    }
+    .scorebar .labels{
+      position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;
+      font-size: 11px; color: #cbd5e1; padding: 0 10px; mix-blend-mode: screen;
+    }
+
+    /* Head cards */
+    .heads{
+      display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:10px 0 20px
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.02), transparent 40%), var(--card);
+      border:1px solid rgba(148,163,184,.18);
+      border-radius: var(--radius); padding:14px 16px; display:flex;align-items:center;justify-content:space-between;gap:12px
+    }
+    .side{
+      display:flex;align-items:center;gap:10px
+    }
+    .pill{
+      padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700;
+      border:1px solid rgba(148,163,184,.25)
+    }
+    .pill.cricket{ color:#052e1b; background: linear-gradient(90deg, rgba(34,197,94,.9), rgba(34,197,94,.7)); border:none}
+    .pill.pong{ color:#0b1f3d; background: linear-gradient(90deg, rgba(59,130,246,.9), rgba(59,130,246,.7)); border:none}
+    .score{
+      font-size: clamp(22px, 3.2vw, 30px); font-weight:800; letter-spacing:.3px
+    }
+    .sub{
+      font-size:12px;color:var(--muted)
+    }
+
+    /* Table */
+    .table{
+      width:100%; border-collapse: separate; border-spacing:0; overflow:hidden;
+      background: var(--card); border:1px solid rgba(148,163,184,.18); border-radius: var(--radius);
+    }
+    .table thead th{
+      text-align:left; font-size:13px; color:#cbd5e1; font-weight:700;
+      padding:14px 14px; background: linear-gradient(180deg, rgba(148,163,184,.12), transparent);
+    }
+    .table tbody td{
+      padding:14px; border-top:1px solid rgba(148,163,184,.12); vertical-align:top
+    }
+    .cat{
+      font-weight:700; font-size:14px
+    }
+    .cn{ display:block; font-weight:500; font-size:12px; color:var(--muted); margin-top:3px }
+    .val{ font-weight:700 }
+    .win{
+      display:inline-flex; align-items:center; gap:8px; font-weight:800
+    }
+    .win .trophy{
+      width:22px;height:22px;border-radius:8px;display:inline-grid;place-items:center;
+      background: linear-gradient(180deg, #fde68a, #f59e0b); color:#3b2903; font-size:13px; box-shadow: 0 2px 10px rgba(245,158,11,.25)
+    }
+    tr.win-cricket{ background: var(--winRow) }
+    tr.win-pong{ background: var(--winRowP) }
+    .note{
+      margin-top:12px; font-size:12px; color:#cbd5e1
+    }
+    .footer{
+      margin-top:18px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between
+    }
+    .badge{
+      font-size:13px; font-weight:800; color:#0b1220;
+      background: linear-gradient(90deg, var(--accent), #f59e0b);
+      padding:8px 12px; border-radius:12px; box-shadow: 0 4px 14px rgba(245,158,11,.25)
+    }
+    .hint{ font-size:12px; color:var(--muted) }
+
+    /* Mobile tweaks */
+    @media (max-width: 720px){
+      .heads{ grid-template-columns:1fr; }
+      .table thead .hide-sm{ display:none }
+      .table tbody .hide-sm{ display:none }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <h1>🏏 Cricket vs. 🏓 Ping Pong — Sports Comparison | 板球 VS 乒乓球：数据对比</h1>
+        <span class="tag">Bilingual 中英双语 · Data-Driven 数据驱动 · For SEA/China 面向东南亚/中国</span>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="scorebar" aria-label="Score progress bar">
+        <div class="fill" id="barFill"></div>
+        <div class="labels">
+          <strong>Cricket 板球</strong>
+          <strong>Ping Pong 乒乓球</strong>
+        </div>
+      </div>
+    </header>
+
+    <!-- Head-to-head cards -->
+    <section class="heads" aria-live="polite">
+      <div class="card">
+        <div class="side">
+          <span class="pill cricket">🏏 Cricket | 板球</span>
+        </div>
+        <div class="side">
+          <div class="score" id="scoreCricket">0</div>
+          <div class="sub">points 分</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="side">
+          <span class="pill pong">🏓 Ping Pong | 乒乓球</span>
+        </div>
+        <div class="side">
+          <div class="score" id="scorePong">0</div>
+          <div class="sub">points 分</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison table -->
+    <section>
+      <table class="table" role="table" aria-label="Cricket vs Ping Pong comparison table">
+        <thead>
+          <tr>
+            <th style="width:34%">Category 类别</th>
+            <th class="hide-sm">🏏 Cricket 板球</th>
+            <th class="hide-sm">🏓 Ping Pong 乒乓球</th>
+            <th>Winner 胜者</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+
+      <p class="note">Note 说明：每个类别以数据为依据，赢得该项即获 1 分。The overall winner is calculated from category wins. 类别胜场相加决定总冠军。</p>
+
+      <div class="footer">
+        <div class="badge" id="winnerBadge">Calculating… 正在计算…</div>
+        <div class="hint">Built for WordPress-friendly embedding via GitHub Pages · 可在 WordPress 中以链接嵌入</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ---- Data (from your message) ----
+    const data = [
+      {
+        key: "years",
+        en: "Number of Years Played",
+        cn: "历史年数（起源至今）",
+        cricket: ">430 years",
+        pong: ">140 years",
+        winner: "cricket"
+      },
+      {
+        key: "olympics",
+        en: "Olympic Appearances",
+        cn: "奥运会出场次数",
+        cricket: "1",
+        pong: "10",
+        winner: "pong"
+      },
+      {
+        key: "viewers",
+        en: "Global Viewership",
+        cn: "全球观众人数",
+        cricket: "3 billion",
+        pong: "0.85 billion",
+        winner: "cricket"
+      },
+      {
+        key: "pros",
+        en: "Number of Players Worldwide (Professional)",
+        cn: "全球职业球员数量",
+        cricket: ">6700",
+        pong: ">3800",
+        winner: "cricket"
+      },
+      {
+        key: "gear",
+        en: "Equipment Pieces Required (fewer is better)",
+        cn: "所需装备数量（越少越好）",
+        cricket: ">8",
+        pong: "1",
+        winner: "pong"
+      },
+      {
+        key: "countries",
+        en: "Number of Countries Played In",
+        cn: "参与国家数量",
+        cricket: "108",
+        pong: "195",
+        winner: "pong"
+      },
+      {
+        key: "popSEA",
+        en: "Popularity in South East Asia/China",
+        cn: "在东南亚/中国的受欢迎度",
+        cricket: "Low（较低）",
+        pong: "High（较高）",
+        winner: "pong"
+      }
+    ];
+
+    // ---- Render rows ----
+    const tbody = document.getElementById('rows');
+    let cricketWins = 0;
+    let pongWins = 0;
+
+    data.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.className = item.winner === 'cricket' ? 'win-cricket' : 'win-pong';
+
+      // Category cell
+      const tdCat = document.createElement('td');
+      tdCat.innerHTML = `<span class="cat">${item.en}</span> <span class="cn">${item.cn}</span>`;
+      tr.appendChild(tdCat);
+
+      // Values
+      const tdC = document.createElement('td');
+      tdC.className = 'hide-sm';
+      tdC.innerHTML = `<span class="val">${item.cricket}</span>`;
+      tr.appendChild(tdC);
+
+      const tdP = document.createElement('td');
+      tdP.className = 'hide-sm';
+      tdP.innerHTML = `<span class="val">${item.pong}</span>`;
+      tr.appendChild(tdP);
+
+      // Winner cell
+      const tdW = document.createElement('td');
+      const winLabel = item.winner === 'cricket'
+        ? '🏏 Cricket | 板球'
+        : '🏓 Ping Pong | 乒乓球';
+      tdW.innerHTML = `
+        <div class="win" aria-label="Winner">
+          <span class="trophy">🏆</span> <span>${winLabel}</span>
+        </div>
+      `;
+      tr.appendChild(tdW);
+
+      tbody.appendChild(tr);
+
+      if(item.winner === 'cricket') cricketWins++; else pongWins++;
+    });
+
+    // ---- Update scores & progress bar ----
+    const total = cricketWins + pongWins;
+    const cPct = Math.round((cricketWins / total) * 100);
+
+    document.getElementById('scoreCricket').textContent = cricketWins;
+    document.getElementById('scorePong').textContent   = pongWins;
+
+    const bar = document.getElementById('barFill');
+    requestAnimationFrame(()=> { bar.style.width = cPct + '%'; });
+
+    const badge = document.getElementById('winnerBadge');
+    const overallWinner = cricketWins > pongWins
+      ? '🏏 Overall Winner: Cricket | 总冠军：板球'
+      : cricketWins < pongWins
+        ? '🏓 Overall Winner: Ping Pong | 总冠军：乒乓球'
+        : '🤝 Draw | 平局';
+    badge.textContent = `${overallWinner} · ${cricketWins} : ${pongWins}`;
+
+    // (Optional) Tiny score pop animation
+    const bump = el => {
+      el.animate([
+        { transform:'scale(1)', offset:0 },
+        { transform:'scale(1.12)', offset:.4 },
+        { transform:'scale(1)', offset:1 }
+      ], { duration: 420, easing:'cubic-bezier(.2,.8,.2,1)' });
+    };
+    bump(document.getElementById('scoreCricket'));
+    bump(document.getElementById('scorePong'));
+    bump(badge);
+  </script>
+</body>
+</html>
