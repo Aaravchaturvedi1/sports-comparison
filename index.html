@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" /> 
+<meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Sports Comparison Hub | 体育对比中心 — Cricket vs Ping Pong / Basketball</title>
-<meta name="description" content="Bilingual (EN/中文) sports comparison hub for kids in SEA/China. Explore Cricket vs Ping Pong and Cricket vs Basketball with card-by-card data."/>
+<title>Sports Comparison Hub | 体育对比中心 — Cricket vs Popular Sports</title>
+<meta name="description" content="Bilingual (EN/中文) sports comparison hub for kids in SEA/China. Explore Cricket vs Ping Pong, Basketball, Badminton, and Football with interactive cards."/>
 <style>
   :root{
     --bg:#0b1220; --panel:#0f172a; --soft:#16223a; --muted:#a9b9cf; --text:#e8eef7;
-    --cricket:#22c55e; --pong:#3b82f6; --ball:#f97316; --gold:#fbbf24;
+    --cricket:#22c55e; --pong:#3b82f6; --ball:#f97316; --shuttle:#a855f7; --foot:#22d3ee; --gold:#fbbf24;
     --radius:22px;
   }
   *{box-sizing:border-box}
@@ -36,9 +36,8 @@
   .hero p{margin:0;color:var(--muted)}
   .grid{
     margin-top:16px;
-    display:grid;grid-template-columns:repeat(2,1fr);gap:14px
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px
   }
-  @media (max-width:820px){ .grid{grid-template-columns:1fr} }
   .card{
     position:relative;overflow:hidden;
     background:linear-gradient(180deg, rgba(255,255,255,.03), transparent 40%), var(--panel);
@@ -59,11 +58,11 @@
   .pill.c{border:none;background:linear-gradient(90deg, rgba(34,197,94,.9), rgba(34,197,94,.7)); color:#062216}
   .pill.p{border:none;background:linear-gradient(90deg, rgba(59,130,246,.95), rgba(59,130,246,.7)); color:#081931}
   .pill.b{border:none;background:linear-gradient(90deg, rgba(249,115,22,.95), rgba(249,115,22,.75)); color:#2a1203}
+  .pill.s{border:none;background:linear-gradient(90deg, rgba(168,85,247,.9), rgba(168,85,247,.7)); color:#25063a}
+  .pill.f{border:none;background:linear-gradient(90deg, rgba(34,211,238,.9), rgba(34,211,238,.7)); color:#03212b}
   .list{display:grid;gap:6px;margin:4px 0 8px}
   .list div{font-size:13px;color:var(--muted)}
-  .cta{
-    display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:6px
-  }
+  .cta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:6px}
   .btn{
     display:inline-flex;align-items:center;gap:8px;cursor:pointer;
     font-weight:900;border:none;border-radius:12px;padding:10px 14px;
@@ -71,11 +70,11 @@
     text-decoration:none
   }
   .btn.orange{ background:linear-gradient(90deg, var(--cricket), var(--ball)); }
+  .btn.purple{ background:linear-gradient(90deg, var(--cricket), var(--shuttle)); }
+  .btn.cyan{ background:linear-gradient(90deg, var(--cricket), var(--foot)); }
   .hint{font-size:12px;color:var(--muted)}
-  /* how it works */
   .how{margin-top:18px;display:grid;gap:10px}
-  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  @media (max-width:820px){ .steps{grid-template-columns:1fr} }
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
   .step{
     background:var(--panel);border:1px solid rgba(148,163,184,.22);border-radius:14px;padding:12px
   }
@@ -95,8 +94,9 @@
         <span class="pill c">🏏 Cricket | 板球</span>
         <span class="pill">VS</span>
         <span class="pill p">🏓 Ping Pong | 乒乓球</span>
-        <span class="pill">/</span>
         <span class="pill b">🏀 Basketball | 篮球</span>
+        <span class="pill s">🏸 Badminton | 羽毛球</span>
+        <span class="pill f">⚽ Football | 足球</span>
       </div>
       <p>Choose a matchup to explore **card-by-card** comparisons. 每张卡片显示一个数据类别：双方数值 ➜ 判定胜者 ➜ 自动计分。</p>
     </section>
@@ -115,12 +115,12 @@
           <span class="pill p">🏓 Ping Pong</span>
         </div>
         <div class="list">
-          <div>• Categories 类别：Years Played / Olympic Appearances / Global Viewership…</div>
+          <div>• Categories: Years Played / Olympic Appearances / Global Viewership…</div>
           <div>• Winner per card gets 1 point. 每张卡胜者得 1 分。</div>
         </div>
         <div class="cta">
           <a class="btn" href="./ping-pong.html" aria-label="Open Cricket vs Ping Pong cards">
-            Start 比赛开始 → 
+            Start 比赛开始 →
           </a>
           <span class="hint">Opens a new page · 新页面打开</span>
         </div>
@@ -138,8 +138,85 @@
           <span class="pill b">🏀 Basketball</span>
         </div>
         <div class="list">
-          <div>• Categories 类别：Years Played / Olympic Appearances / Global Viewership…</div>
+          <div>• Categories: Years Played / Olympic Appearances / Global Viewership…</div>
           <div>• Winner per card gets 1 point. 每张卡胜者得 1 分。</div>
         </div>
         <div class="cta">
-          <a class="btn orange" href="./basketball.html" aria-label="Open Cricket vs
+          <a class="btn orange" href="./basketball.html" aria-label="Open Cricket vs Basketball cards">
+            Start 比赛开始 →
+          </a>
+          <span class="hint">Opens a new page · 新页面打开</span>
+        </div>
+      </article>
+
+      <!-- Badminton -->
+      <article class="card">
+        <div class="head">
+          <div class="title">Cricket vs Badminton<span class="cn">板球 对比 羽毛球</span></div>
+          <div class="badge">Card Mode 卡片模式</div>
+        </div>
+        <div class="row">
+          <span class="pill c">🏏 Cricket</span>
+          <span class="pill">VS</span>
+          <span class="pill s">🏸 Badminton</span>
+        </div>
+        <div class="list">
+          <div>• Categories: Years Played / Olympic Appearances / Global Viewership…</div>
+          <div>• Winner per card gets 1 point. 每张卡胜者得 1 分。</div>
+        </div>
+        <div class="cta">
+          <a class="btn purple" href="./badminton.html" aria-label="Open Cricket vs Badminton cards">
+            Start 比赛开始 →
+          </a>
+          <span class="hint">Opens a new page · 新页面打开</span>
+        </div>
+      </article>
+
+      <!-- Football -->
+      <article class="card">
+        <div class="head">
+          <div class="title">Cricket vs Football<span class="cn">板球 对比 足球</span></div>
+          <div class="badge">Card Mode 卡片模式</div>
+        </div>
+        <div class="row">
+          <span class="pill c">🏏 Cricket</span>
+          <span class="pill">VS</span>
+          <span class="pill f">⚽ Football</span>
+        </div>
+        <div class="list">
+          <div>• Categories: Years Played / Olympic Appearances / Global Viewership…</div>
+          <div>• Winner per card gets 1 point. 每张卡胜者得 1 分。</div>
+        </div>
+        <div class="cta">
+          <a class="btn cyan" href="./football.html" aria-label="Open Cricket vs Football cards">
+            Start 比赛开始 →
+          </a>
+          <span class="hint">Opens a new page · 新页面打开</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- How it works -->
+    <section class="how" aria-label="how it works">
+      <h2 style="margin:6px 0 0;font-size:18px">How it works · 使用说明</h2>
+      <div class="steps">
+        <div class="step"><strong>1) Pick 选择</strong>Choose a matchup. 选择一个对比项目。</div>
+        <div class="step"><strong>2) Tap 点击</strong>Tap “Next 下一张” to view each category card. 点击“下一张”浏览每张卡。</div>
+        <div class="step"><strong>3) Tally 计分</strong>Each card awards 1 point to the winner. 最终分数决定总冠军。</div>
+      </div>
+    </section>
+
+    <footer>
+      <div>Built for WordPress-friendly linking via GitHub Pages · 适合从 WordPress 以按钮/链接方式打开</div>
+      <div>Files: <code>ping-pong.html</code> · <code>basketball.html</code> · <code>badminton.html</code> · <code>football.html</code></div>
+    </footer>
+  </div>
+
+  <noscript>
+    <div style="max-width:1000px;margin:12px auto;color:#fff;background:#1a243d;border:1px solid #3a4b70;padding:10px;border-radius:10px">
+      JavaScript is disabled. Buttons still open the comparison pages. 如果浏览器未启用 JavaScript，仍可点击按钮进入对比页面。
+    </div>
+  </noscript>
+</body>
+</html>
+
