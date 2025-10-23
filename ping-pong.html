@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cricket vs. Ping Pong — Card Compare | 板球 对比 乒乓球 · 卡片模式</title>
+<style>
+  :root{
+    --bg:#0b1220; --panel:#0f172a; --soft:#16223a; --muted:#9fb0c7; --text:#e8eef7;
+    --cricket:#22c55e; --pong:#3b82f6; --gold:#fbbf24; --radius:20px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(900px 500px at 10% -10%, rgba(34,197,94,.12),transparent 60%),radial-gradient(900px 500px at 110% 0, rgba(59,130,246,.1),transparent 60%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Noto Sans SC,PingFang SC,Microsoft YaHei,Arial,sans-serif;line-height:1.5;padding:18px}
+  .wrap{max-width:900px;margin:0 auto}
+  header{margin-bottom:14px}
+  h1{font-size:clamp(22px,3.6vw,34px);margin:0 0 6px}
+  .tag{display:inline-block;font-size:12px;color:#cfe0ff;background:linear-gradient(90deg,rgba(34,197,94,.12),rgba(59,130,246,.12));border:1px solid rgba(148,163,184,.22);padding:6px 10px;border-radius:999px}
+  /* top progress (score tilt) */
+  .scorebar{margin:14px 0;background:#0c1326;border:1px solid rgba(148,163,184,.22);height:18px;border-radius:999px;position:relative;overflow:hidden}
+  .fill{position:absolute;inset:0 0 0 auto;width:0;background:linear-gradient(90deg,var(--cricket),#10b981);transition:width .6s ease}
+  .labels{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#d0deff;padding:0 10px;mix-blend-mode:screen}
+  .scores{display:flex;gap:10px;margin-bottom:10px}
+  .scorepill{background:var(--panel);border:1px solid rgba(148,163,184,.22);border-radius:999px;padding:6px 10px;font-size:12px}
+  .scorepill strong{font-size:16px;margin:0 4px}
+  /* card */
+  .card{
+    background:linear-gradient(180deg,rgba(255,255,255,.03),transparent 40%),var(--panel);
+    border:1px solid rgba(148,163,184,.22); border-radius:var(--radius);
+    padding:18px; display:grid; gap:14px; box-shadow:0 10px 30px rgba(0,0,0,.25);
+    min-height:280px; animation:pop .28s ease;
+  }
+  @keyframes pop{from{transform:translateY(6px);opacity:.0}to{transform:translateY(0);opacity:1}}
+  .step{font-size:13px;color:var(--muted)}
+  .title{font-size:clamp(18px,3vw,24px);font-weight:800}
+  .title .cn{display:block;font-size:12px;color:var(--muted);margin-top:2px}
+  .vs{
+    display:grid; grid-template-columns:1fr auto 1fr; gap:10px; align-items:stretch;
+  }
+  .side{background:linear-gradient(180deg,rgba(34,197,94,.03),transparent),var(--soft);
+        border:1px solid rgba(148,163,184,.22); border-radius:16px; padding:12px}
+  .side.badge-cricket{outline:2px solid rgba(34,197,94,.2)}
+  .side.badge-pong{outline:2px solid rgba(59,130,246,.2)}
+  .name{font-weight:800;font-size:14px;margin-bottom:6px}
+  .stat{font-size:16px;font-weight:900}
+  .mid{font-weight:900;color:#cbd5e1;padding:0 6px}
+  .winner{
+    display:flex;align-items:center;gap:8px;background:linear-gradient(90deg,var(--gold),#f59e0b);
+    color:#271a00;border-radius:12px;padding:8px 12px;font-weight:900;justify-content:flex-start;width:max-content
+  }
+  .desc{font-size:13px;color:var(--muted)}
+  .actions{display:flex;justify-content:space-between;gap:10px}
+  .btn{
+    background:#0c1326;border:1px solid rgba(148,163,184,.28);color:#e8eef7;border-radius:12px;padding:10px 14px;font-weight:700;cursor:pointer
+  }
+  .btn.primary{background:linear-gradient(90deg,var(--cricket),var(--pong));border:none;color:#08121f}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .dots{display:flex;gap:6px;align-items:center}
+  .dot{width:9px;height:9px;border-radius:6px;background:#283044;border:1px solid rgba(148,163,184,.28)}
+  .dot.active{background:linear-gradient(90deg,var(--cricket),var(--pong))}
+  .final-title{font-size:clamp(18px,3vw,26px);font-weight:900}
+  .badge{
+    display:inline-flex;align-items:center;gap:8px;background:linear-gradient(90deg,var(--gold),#f59e0b);
+    color:#2b1b00;border-radius:14px;padding:10px 14px;font-weight:900
+  }
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:720px){ .vs{grid-template-columns:1fr;}.mid{display:none}.grid-2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🏏 Cricket vs. 🏓 Ping Pong — Card Compare | 板球 VS 乒乓球 · 卡片模式</h1>
+    <span class="tag">Bilingual 中英双语 · Data-Driven 数据驱动 · For SEA/China 面向东南亚/中国</span>
+
+    <div class="scores" aria-live="polite">
+      <div class="scorepill">🏏 Cricket | 板球：<strong id="sC">0</strong> 分</div>
+      <div class="scorepill">🏓 Ping Pong | 乒乓球：<strong id="sP">0</strong> 分</div>
+    </div>
+    <div class="scorebar" aria-label="overall score tilt">
+      <div class="fill" id="bar"></div>
+      <div class="labels"><b>Cricket</b><b>Ping Pong</b></div>
+    </div>
+  </header>
+
+  <main id="stage" class="card" aria-live="polite" aria-atomic="true"></main>
+
+  <div class="actions" style="margin-top:12px">
+    <div class="dots" id="dots"></div>
+    <div style="display:flex; gap:8px">
+      <button class="btn" id="prevBtn">⟵ Back 上一张</button>
+      <button class="btn primary" id="nextBtn">Next 下一张 ⟶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ----- dataset (your values) -----
+  const CARDS = [
+    {type:'intro',
+     titleEN:'Compare Cricket with Ping Pong!',
+     titleCN:'比较：板球 与 乒乓球！',
+     note:'Swipe / Click Next to start. 点击“下一张”开始对比。'
+    },
+    {key:'years',  en:'Number of Years Played', cn:'历史年数（起源至今）',
+     c:'>430 years', p:'>140 years', winner:'c',
+     tip:'Older sport gets 1 point. 历史更久者获 1 分。'
+    },
+    {key:'olym',   en:'Olympic Appearances', cn:'奥运会出场次数',
+     c:'1', p:'10', winner:'p',
+     tip:'More Olympic appearances gets 1 point. 出场次数更多者获 1 分。'
+    },
+    {key:'view',   en:'Global Viewership', cn:'全球观众人数',
+     c:'3 billion', p:'0.85 billion', winner:'c',
+     tip:'Higher viewership gets 1 point. 观众更多者获 1 分。'
+    },
+    {key:'pros',   en:'Players Worldwide (Professional)', cn:'全球职业球员数量',
+     c:'>6700', p:'>3800', winner:'c',
+     tip:'More registered pros gets 1 point. 职业球员更多者获 1 分。'
+    },
+    {key:'gear',   en:'Equipment Pieces Required (fewer is better)', cn:'所需装备数量（越少越好）',
+     c:'>8', p:'1', winner:'p',
+     tip:'Fewer items is easier → 1 point. 装备越少越易开展 → 1 分。'
+    },
+    {key:'countries', en:'Number of Countries Played In', cn:'参与国家数量',
+     c:'108', p:'195', winner:'p',
+     tip:'Played in more countries gets 1 point. 覆盖国家更多者获 1 分。'
+    },
+    {key:'pop',    en:'Popularity in South East Asia/China', cn:'在东南亚/中国的受欢迎度',
+     c:'Low（较低）', p:'High（较高）', winner:'p',
+     tip:'Higher regional popularity gets 1 point. 区域更受欢迎者获 1 分。'
+    },
+    {type:'final'}
+  ];
+
+  // ----- state -----
+  let idx = 0;          // current card index
+  let sC = 0, sP = 0;   // scores
+
+  const stage = document.getElementById('stage');
+  const dots = document.getElementById('dots');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const sCEl = document.getElementById('sC'), sPEl = document.getElementById('sP');
+  const bar = document.getElementById('bar');
+
+  // dots
+  function renderDots() {
+    dots.innerHTML = '';
+    CARDS.forEach((c,i)=>{
+      if(c.type==='intro') return; // hide dot for intro
+      const el = document.createElement('div');
+      el.className = 'dot' + (i===idx ? ' active' : '');
+      dots.appendChild(el);
+    });
+  }
+
+  function updateTopBar() {
+    sCEl.textContent = sC; sPEl.textContent = sP;
+    const total = sC + sP || 1;
+    const pct = Math.round((sC/total)*100);
+    requestAnimationFrame(()=> bar.style.width = pct + '%');
+  }
+
+  function renderCard() {
+    const c = CARDS[idx];
+    renderDots();
+
+    // adjust nav buttons
+    prevBtn.disabled = idx===0;
+    nextBtn.textContent = (idx === CARDS.length-1) ? 'Restart 重新开始' : 'Next 下一张 ⟶';
+
+    if(c.type==='intro'){
+      stage.innerHTML = `
+        <div class="step">Step 步骤 0 / ${CARDS.length-2}</div>
+        <div class="title">${c.titleEN}<span class="cn">${c.titleCN}</span></div>
+        <div class="grid-2">
+          <div class="side badge-cricket">
+            <div class="name">🏏 Cricket | 板球</div>
+            <div class="desc">Learn how cricket stacks up against sports you already know! 了解板球如何与熟悉的运动对比！</div>
+          </div>
+          <div class="side badge-pong">
+            <div class="name">🏓 Ping Pong | 乒乓球</div>
+            <div class="desc">The classic in China/SEA. 中国/东南亚的经典热门项目。</div>
+          </div>
+        </div>
+        <div class="desc">${c.note}</div>
+      `;
+      return;
+    }
+
+    if(c.type==='final'){
+      const overall = (sC>sP) ? {t:'🏏 Overall Winner: Cricket | 总冠军：板球', cls:'badge'}
+                    : (sC<sP) ? {t:'🏓 Overall Winner: Ping Pong | 总冠军：乒乓球', cls:'badge'}
+                              : {t:'🤝 Draw | 平局', cls:'badge'};
+      stage.innerHTML = `
+        <div class="final-title">${overall.t}</div>
+        <div class="grid-2">
+          <div class="side badge-cricket">
+            <div class="name">🏏 Cricket | 板球</div>
+            <div class="stat">${sC} points 分</div>
+          </div>
+          <div class="side badge-pong">
+            <div class="name">🏓 Ping Pong | 乒乓球</div>
+            <div class="stat">${sP} points 分</div>
+          </div>
+        </div>
+        <div class="desc">Tap “Restart 重新开始” to replay the cards. 点击“重新开始”再次浏览每张卡片。</div>
+      `;
+      return;
+    }
+
+    // normal category card
+    stage.innerHTML = `
+      <div class="step">Step 步骤 ${idx} / ${CARDS.length-2}</div>
+      <div class="title">${c.en}<span class="cn">${c.cn}</span></div>
+      <div class="vs">
+        <div class="side badge-cricket">
+          <div class="name">🏏 Cricket | 板球</div>
+          <div class="stat">${c.c}</div>
+        </div>
+        <div class="mid">VS</div>
+        <div class="side badge-pong">
+          <div class="name">🏓 Ping Pong | 乒乓球</div>
+          <div class="stat">${c.p}</div>
+        </div>
+      </div>
+      <div class="winner" role="status" aria-live="polite">
+        <span>🏆</span>
+        <span>${c.winner==='c' ? 'Cricket | 板球' : 'Ping Pong | 乒乓球'}</span>
+      </div>
+      <div class="desc">${c.tip}</div>
+    `;
+  }
+
+  // recompute score from cards up to current index
+  function recomputeScore(){
+    sC = 0; sP = 0;
+    for(let i=0;i<=idx;i++){
+      const c = CARDS[i];
+      if(c && c.winner){
+        if(c.winner==='c') sC++; else if(c.winner==='p') sP++;
+      }
+    }
+    updateTopBar();
+  }
+
+  // buttons
+  prevBtn.addEventListener('click', ()=>{
+    if(idx>0){ idx--; recomputeScore(); renderCard(); }
+  });
+  nextBtn.addEventListener('click', ()=>{
+    if(idx === CARDS.length-1){
+      // restart
+      idx = 0; sC = 0; sP = 0; updateTopBar(); renderCard(); return;
+    }
+    idx++;
+    // If we just moved past last category into final, keep final scores fixed
+    if(CARDS[idx]?.type==='final'){
+      // score already complete; nothing to add
+    }else{
+      // add score of this card
+    }
+    recomputeScore();
+    renderCard();
+  });
+
+  // init
+  updateTopBar();
+  renderCard();
+  renderDots();
+</script>
+</body>
+</html>
